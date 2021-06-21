@@ -15,6 +15,10 @@ namespace DataAccess.Concrete.EntityFramework
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=GamePlatformDb;Trusted_Connection=true");
         }
 
-        public DbSet<Game> 
+        public DbSet<Game> Games { get; set; }
+        public DbSet<GameDeveloper> GameDevelopers { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Gamer> Gamers { get; set; }
+        public DbSet<SystemPersonnel> SystemPersonnels { get; set; }
     }
 }
