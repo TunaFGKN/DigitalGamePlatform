@@ -16,5 +16,6 @@ namespace Business.Abstract
         IDataResult<Game> GetById(int gameId);
         IResult Add(Game game);
         IResult Update(Game game);
+        IResult Delete(Game game);
     }
 }

@@ -1,6 +1,9 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -21,8 +24,17 @@ namespace Business.Concrete
             _gameDal = gameDal;
         }
 
+        [ValidationAspect(typeof(GameValidator))]
+        [CacheRemoveAspect("IGameService.Get")]
         public IResult Add(Game game)
         {
+            IResult result = BusinessRules.Run(CheckIfGameNameExists(game.GameName));
+
+            if (result != null)
+            {
+                return result;
+            }
+
             _gameDal.Add(game);
 
             return new SuccessResult(Messages.GameAdded);
@@ -52,7 +64,24 @@ namespace Business.Concrete
 
         public IResult Update(Game game)
         {
-            throw new NotImplementedException();
+            _gameDal.Update(game);
+            return new SuccessResult(Messages.GameUpdated);
+        }
+
+        public IResult Delete(Game game)
+        {
+            _gameDal.Delete(game);
+            return new SuccessResult(Messages.GameDeleted);
+        }
+
+        private IResult CheckIfGameNameExists(string gameName)
+        {
+            var result = _gameDal.GetAll(g => g.GameName == gameName).Any();
+            if (result)
+            {
+                return new ErrorResult(Messages.GameNameAlreadyExists);
+            }
+            return new SuccessResult();
         }
     }
 }
