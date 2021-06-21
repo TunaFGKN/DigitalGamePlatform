@@ -10,5 +10,6 @@ namespace Business.Constants
     {
         public static string GameAdded = "Game added";
         public static string GamesListed = "Games Listed";
+        public static string AuthorizationDenied = "Authorization Denied";
     }
 }
